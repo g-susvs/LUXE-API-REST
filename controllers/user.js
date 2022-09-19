@@ -5,25 +5,34 @@ const User = require('../models/user');
 const getUsers = async (req, res = response) => {
 
     const query = { estado: true };
-
-    const [users, total] = await Promise.all([
-        User.find(query),
-        User.countDocuments(query)
-    ])
-    res.status(200).json({ total, users })
+    try {
+        const [users, total] = await Promise.all([
+            User.find(query),
+            User.countDocuments(query)
+        ])
+        res.status(200).json({ total, users })
+        
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
+    
 }
 
 const getUser = async (req, res = response) => {
-
+    
     const { id } = req.params;
-    const user = await User.findById(id);
-    if (!user.state) {
-        return res.status(404).json({
-            msg: 'El usuario esta eliminado'
-        })
+    try {
+        const user = await User.findById(id);
+        if (!user.state)throw {msg:'El usuario esta eliminado'};
+        
+        res.status(200).json(user)
+    }catch (error) {
+        console.log(error);
+        res.json(error);
+    
     }
 
-    res.status(200).json(user)
 }
 
 const createUser = async (req = request, res = response) => {
