@@ -1,19 +1,13 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-    try{
-
-        await mongoose.connect(process.env.MONGO_CNN, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-          },(err) => {
-            if (err) throw err;
-            console.log('Base de datos ONLINE');
-        });
+   
+    mongoose.connect(process.env.MONGO_CNN, { useNewUrlParser: true })
+    .then(() =>
+        console.log('Base de datos online')
+    )
+    .catch(err => console.log(err));
         
-    }catch(err){
-        console.log(err);
-        throw new Error('Error en la base de datos');
-    }
+    
 }
 module.exports = {connectDB};
