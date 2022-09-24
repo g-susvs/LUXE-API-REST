@@ -1,6 +1,12 @@
 const {Router} = require('express');
 const {check, param} = require('express-validator');
-const { getUsers, getUser, createUser, updateUser, deleteUser } = require('../controllers/user');
+const { 
+    getUsers, 
+    getUser, 
+    createUser, 
+    updateUser, 
+    deleteUser 
+} = require('../controllers/user');
 
 const { 
     validateFields, 
