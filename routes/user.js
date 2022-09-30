@@ -13,20 +13,26 @@ const {
     validateJWT, 
     emailExists, 
     customValidPassword,
-    isAdminRole
+    isAdminRole,
+    isPhoneValid,
+    isDNIValid,
+    isRUCValid
 } = require('../middlewares');
+const { cacheInit } = require('../middlewares/cache');
 
 const router = Router();
 
-router.get('/', [],getUsers);
+router.get('/', cacheInit ,getUsers);
 
 router.get('/:id', [
+    cacheInit,
     check('id','El id debe ser una id de mongo').isMongoId(),
     validateFields
 ],getUser);
 
 router.post('/', [
     check('name','El nombre es obligatorio').notEmpty(),
+    check('email','El email es obligatorio').notEmpty(),
     check('email','El email no es valido').isEmail(),
     check('email').custom(emailExists),
     check('password','La contraseña es obligatoria').notEmpty(),
@@ -36,8 +42,10 @@ router.post('/', [
 
 router.put('/:id', [
     check('id','El id debe ser una id de mongo').isMongoId(),
-    check('phone','El Número de teléfono no es valido').isLength(9),
     check('password').custom(customValidPassword),
+    check('phone').custom(isPhoneValid),
+    check('DNI').custom(isDNIValid),
+    check('RUC').custom(isRUCValid),
     validateFields
 ],updateUser);
 

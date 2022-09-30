@@ -11,7 +11,6 @@ const generateJWT = async (id) =>{
                    console.log(err);
                    reject(err)
                }else{
-                   console.log('Creado el token');
                    resolve(token);
                }
         });

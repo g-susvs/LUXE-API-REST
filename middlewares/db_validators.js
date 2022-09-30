@@ -8,14 +8,13 @@ const emailExists = async (email) => {
 }
 
 const customValidPassword = async (password) => {
-    if(password){
-        if(password.length < 6) throw `La contraseña debe tener minimo 6 caracteres`;
-    }
+    if(!password) return;
+
+    if(password.length < 6) throw `La contraseña debe tener minimo 6 caracteres`;
 }
 
 const isAdminRole = async (req, res, next) => {
     const {user} = req;
-    // const user = await User.findById(id);
     if(user.role != 'ADMIN_ROLE'){
         return res.status(400).json({
             msg:'Rol del usuario no es valido'
@@ -24,8 +23,37 @@ const isAdminRole = async (req, res, next) => {
     next();
 }
 
+const isPhoneValid = async (phone) => {
+    if(!phone) return;
+    
+    let phoneString = String(phone);
+
+    if(phoneString[0] != 9) throw `Error - El teléfono debe empezar con 9`
+
+    if(phoneString.length != 9) throw `Error - El teléfono debe tener 9 digitos`;
+}
+
+const isDNIValid = async (dni) => {
+    if(!dni) return;
+    
+    let dniString = String(dni);
+    
+    if(dniString.length != 8) throw `Error - El DNI debe tener 8 digitos`;
+}
+
+const isRUCValid = async (ruc) => {
+    if(!ruc) return;
+    
+    let rucString = String(ruc);
+    
+    if(rucString.length != 11) throw `Error - El RUC debe tener 11 digitos`;
+}
+
 module.exports = {
     emailExists,
     customValidPassword,
-    isAdminRole
+    isAdminRole,
+    isPhoneValid,
+    isDNIValid,
+    isRUCValid
 }

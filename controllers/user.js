@@ -4,7 +4,7 @@ const User = require('../models/user');
 
 const getUsers = async (req, res = response) => {
 
-    const query = { estado: true };
+    const query = { state: true };
     try {
         const [users, total] = await Promise.all([
             User.find(query),
