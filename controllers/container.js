@@ -3,7 +3,7 @@ const Container = require('../models/container')
 
 const getContainers = async(req,res) => {
     
-    const query = { estado: true };
+    const query = { state: true }; 
 
     try {
         const [containers, total] = await Promise.all([
@@ -21,9 +21,16 @@ const getContainers = async(req,res) => {
 const getContainer = async(req,res= response) => {
     
     const {id} = req.params;
-    const container = await Container.findById(id)
-                            .populate('user','name');
-    res.json(container);
+
+    try {
+        const container = await Container.findById(id) // se podria validar por el state y demas
+                                .populate('user','name');
+        res.json(container);
+        
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
 }
 const createContainer = async(req,res= response) => {
     
@@ -63,7 +70,7 @@ const deleteContainer = async(req,res) => {
     
     const {id} = req.params;
 
-    const container = await Container.findByIdAndUpdate(id,{estado:false},{new:true});
+    const container = await Container.findByIdAndUpdate(id,{state:false},{new:true});
     
 
     res.json(container)

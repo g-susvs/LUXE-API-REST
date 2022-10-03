@@ -4,35 +4,48 @@ const Item = require("../models/item");
 const getItems = async(req,res= response) => {
 
     const {limite = 0 , desde = 0} = req.query;
-    const query = {estado:true};
+    const query = {state:true};
 
-    const [total, items] = await Promise.all([
-        Item.countDocuments(query),
-        Item.find(query)
-        .skip(Number(desde))
-        .limit(Number(limite))
-        .populate("user","name")
-        .populate("container","name")
-    ])
-    res.json({
-        total,
-        items,
-    })
+    try {
+        const [total, items] = await Promise.all([
+            Item.countDocuments(query),
+            Item.find(query)
+            .skip(Number(desde))
+            .limit(Number(limite))
+            .populate("user","name")
+            .populate("container","name")
+        ])
+        res.json({
+            total,
+            items,
+        })
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
+
 }
 
 const getItem = async(req,res=response) => {
 
     const {id} = req.params;
-    const item = await Item.findById(id)
-                            .populate('user','name')
-                            .populate('container','name');
 
-    res.json(item);
+    try {
+        const item = await Item.findById(id) // evaluar el state de y demas
+                                .populate('user','name')
+                                .populate('container','name');
+    
+        res.json(item);
+        
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
 }
 
 const postItems = async(req,res=response) => {
     
-    const {estado, user, ...body} = req.body;
+    const {state, user, ...body} = req.body;
 
     const itemDB = await Item.findOne({name: body.name});
 
@@ -60,7 +73,7 @@ const postItems = async(req,res=response) => {
 const putItems = async(req,res=response) => {
 
     const{id}= req.params;
-    const{ estado, user, ...data} =req.body;
+    const{ state, user, ...data} =req.body;
 
     if (data.name) {
         data.name = data.name.toUpperCase();
@@ -79,7 +92,7 @@ const deleteItems = async(req,res=response) => {
 
     const {id} = req.params;
 
-    const itemBorrado = await Item.findByIdAndUpdate(id,{estado:false},{new:true});
+    const itemBorrado = await Item.findByIdAndUpdate(id,{state:false},{new:true});
     // const categoriaAutenticado = req.usuario;
 
     res.json(itemBorrado)

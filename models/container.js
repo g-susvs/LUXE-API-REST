@@ -24,15 +24,14 @@ const ContainerSchema = new Schema({
         ref: 'User',
         required: true
     },
-    estado:{
+    state:{
         type: Boolean,
         default: true,
-        required:true
     },
 });
 
 ContainerSchema.methods.toJSON = function(){
-    const { __v,estado, ...data } = this.toObject();//quitar __v del paginado | data muestra
+    const { __v,state, ...data } = this.toObject();//quitar __v del paginado | data muestra
 
     return data;
 }

@@ -7,14 +7,19 @@ const {
     putItems, 
     deleteItems } = require('../controllers/item');
 const { existeContainerPorId, existeItemPorId } = require('../helpers/db_validator');
-const { validateJWT,validateFields } = require('../middlewares');
+const { 
+    cacheInit,
+    validateJWT,
+    validateFields
+} = require('../middlewares');
 
 
 const router = Router();
 
-router.get('/', getItems);
+router.get('/', cacheInit, getItems);
 
 router.get('/:id',[
+    cacheInit,
     check('id','No es un id de Mongo valido').isMongoId(),
     check('id').custom(existeItemPorId),
     validateFields
@@ -31,6 +36,7 @@ router.post('/', [
 
 router.put('/:id', [
     validateJWT,
+    check('id','No es un id de Mongo valido').isMongoId(),
     check('id').custom(existeItemPorId),
     validateFields
 ],

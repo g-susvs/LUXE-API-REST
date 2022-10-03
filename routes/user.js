@@ -16,9 +16,9 @@ const {
     isAdminRole,
     isPhoneValid,
     isDNIValid,
-    isRUCValid
+    isRUCValid,
+    cacheInit
 } = require('../middlewares');
-const { cacheInit } = require('../middlewares/cache');
 
 const router = Router();
 

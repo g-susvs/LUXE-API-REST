@@ -2,12 +2,15 @@ const { response, request } = require('express');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-const getUsers = async (req, res = response) => {
+const getUsers = async (req=request, res = response) => {
 
     const query = { state: true };
+    const {limit=10, from=1} = req.query;
     try {
         const [users, total] = await Promise.all([
-            User.find(query),
+            User.find(query)
+            .skip(Number(from))
+            .limit(Number(limit)),
             User.countDocuments(query)
         ])
         res.status(200).json({ total, users })

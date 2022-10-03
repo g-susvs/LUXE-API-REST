@@ -14,10 +14,9 @@ const ItemSchema = new Schema({
         type: String,
         default:""
     },
-    estado:{
+    state:{
         type: Boolean,
         default: true,
-        required:true
     },
     date_register:{
         type: Date
@@ -35,7 +34,7 @@ const ItemSchema = new Schema({
 })
 
 ItemSchema.methods.toJSON = function(){
-    const { __v,estado, ...data } = this.toObject();//quitar __v del paginado | data muestra
+    const { __v,state, ...data } = this.toObject();//quitar __v del paginado | data muestra
 
     return data;
 }
