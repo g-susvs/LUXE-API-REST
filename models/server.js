@@ -31,6 +31,7 @@ class Server{
         this.app.use('/api/auth',require('../routes/auth'));
         this.app.use('/api/containers',require('../routes/container'));
         this.app.use('/api/items',require('../routes/item'));
+        this.app.use('/api/search',require('../routes/search'));
         this.app.use('/api/uploads',require('../routes/upload'));
         this.app.use('/api/userprofile',require('../routes/profile'));
         
