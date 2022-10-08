@@ -25,6 +25,7 @@ class Server{
         this.app.use('/api/auth',require('../routes/auth'));
         this.app.use('/api/containers',require('../routes/container'));
         this.app.use('/api/items',require('../routes/item'));
+        this.app.use('/api/buscar',require('../routes/search'));
         
         this.app.get('/*',(req,res)=>{
             const pathFile = path.join(__dirname + '/../public/404.html')
