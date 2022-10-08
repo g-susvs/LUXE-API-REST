@@ -36,6 +36,7 @@
         a{
             font-size: 1.2rem;
         }
+        
     </style>
 </head>
 <body>
@@ -43,8 +44,9 @@
         <h1>LU<span style="color: #FDC500;">X</span>E API</h1>
         <h4>Rutas del API</h4>
         <div id="rutas">
-    
+
         </div>
+        <br>
         <a id="doc" target="_blank" href="https://documenter.getpostman.com/view/23147447/2s7YfU7XSt">Ver documentación detallada.</a>
     </div>
 
@@ -53,16 +55,16 @@
         const d = document;
         const $div = d.getElementById('rutas');
         const $a = d.getElementById('doc');
+
         $div.innerHTML = `
             <ul>
-                <li>${window.location.href}api/users</li>
-                <li>${window.location.href}api/auth</li>
+                <li>${window.location.href}api/users </li>
+                <li>${window.location.href}api/container </li>
+                <li>${window.location.href}api/items </li>
+                <li>${window.location.href}api/auth </li>
+                <li>${window.location.href}api/uploads </li>
             </ul>
         `
-        // d.addEventListener('click',(e)=>{
-        //     e.preventDefault();
-        //     open()
-        // })
     </script>
 </body>
 </html>
