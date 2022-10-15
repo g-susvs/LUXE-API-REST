@@ -5,10 +5,11 @@ const {
     getContainer, 
     createContainer, 
     updateContainer, 
-    deleteContainer 
+    deleteContainer, 
+    assignUser
 } = require('../controllers/container');
 const { existeContainerPorId } = require('../helpers/db_validator');
-const { validateFields, validateJWT } = require('../middlewares');
+const { validateFields, validateJWT, containerIsBussy } = require('../middlewares');
 const { cacheInit } = require('../middlewares/cache');
 
 const router = Router();
@@ -43,4 +44,11 @@ router.delete('/:id',[
     validateFields
 ], deleteContainer);
 
+router.put('/assign/:id',[
+    validateJWT,
+    check('id','No es un ID de mongo valido').isMongoId(),
+    check('id').custom(containerIsBussy),
+    check('assign_user','No es un ID de mongo valido').isMongoId(),
+    validateFields
+] ,assignUser );
 module.exports = router

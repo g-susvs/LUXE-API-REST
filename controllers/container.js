@@ -1,5 +1,6 @@
 const { response} = require('express');
-const Container = require('../models/container')
+const { findById } = require('../models/container');
+const {Container, User} = require('../models');
 
 const getContainers = async(req,res) => {
     
@@ -76,10 +77,34 @@ const deleteContainer = async(req,res) => {
     res.json(container)
 }
 
+const assignUser = async (req, res) => {
+    
+    const {id} = req.params;
+
+    const {assign_user} = req.body;
+
+    const user = await User.findById(assign_user);
+
+    if(!user){
+        return res.status(404).json({
+            msg: `No existe usuario con el id ${assign_user}`
+        })
+    }
+
+    const container = await Container.findByIdAndUpdate(id,{assign_user});
+
+    res.status(200).json({
+        msg: `El usuario a sido asignado al contenedor ${container.name}`,
+    })
+    
+
+}
+
 module.exports = {
     getContainer,
     getContainers,
     createContainer,
     updateContainer,
-    deleteContainer
+    deleteContainer,
+    assignUser
 }

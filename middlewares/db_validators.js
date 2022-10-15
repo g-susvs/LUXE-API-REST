@@ -1,4 +1,4 @@
-const User = require("../models/user")
+const {User, Container} = require("../models")
 
 const emailExists = async (email) => {
     const user = await User.findOne({email});
@@ -28,7 +28,7 @@ const isPhoneValid = async (phone) => {
     
     let phoneString = String(phone);
 
-    if(phoneString[0] != 9) throw `Error - El teléfono debe empezar con 9`
+    if(phoneString[0] != 9) throw `Error - El teléfono debe empezar con 9`;
 
     if(phoneString.length != 9) throw `Error - El teléfono debe tener 9 digitos`;
 }
@@ -66,7 +66,15 @@ const validFormDataFile = (req, res, next) => {
 
     next();
 }
+const containerIsBussy = async (id) => {
 
+    const container = await Container.findById(id);
+
+    if(!container) throw `No existe contenedor con el id ${id}`;
+
+    if(container.assign_user)  throw `El contenedor ${container.name} ya está ocupado`;
+
+}
 module.exports = {
     emailExists,
     customValidPassword,
@@ -75,5 +83,6 @@ module.exports = {
     isDNIValid,
     isRUCValid,
     validFormDataFile,
-    isValidCollection
+    isValidCollection,
+    containerIsBussy
 }

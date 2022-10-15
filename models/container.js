@@ -19,6 +19,10 @@ const ContainerSchema = new Schema({
         type: String,
         required: [true,'Type container is required']
     },
+    assign_user:{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
     user:{
         type: Schema.Types.ObjectId,
         ref: 'User',

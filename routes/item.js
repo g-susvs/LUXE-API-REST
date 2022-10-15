@@ -29,6 +29,7 @@ getItem);
 router.post('/', [
     validateJWT,
     check('name','El nombre es obligatorio').not().isEmpty(),
+    check('description','El nombre es obligatorio').not().isEmpty(),
     check('container','No es un id de mongo').isMongoId(),
     check('container').custom(existeContainerPorId),
     validateFields

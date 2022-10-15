@@ -6,6 +6,10 @@ const ItemSchema = new Schema({
         required: [true,'Name is required'],
         unique:true
     },
+    description:{
+        type: String,
+        required: [true,'Name is required'],
+    },
     img_client:{
         type: String,
         default:""
