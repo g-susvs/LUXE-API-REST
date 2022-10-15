@@ -6,7 +6,7 @@ const userProfile = async (req = request, res) => {
 
     try {
         const [containers, items] = await Promise.all([
-            Container.find({user:user.id}),
+            Container.find({assign_user: user.id}),
             Item.find({user:user.id})
         ])
         
