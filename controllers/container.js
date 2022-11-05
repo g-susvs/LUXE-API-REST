@@ -1,6 +1,7 @@
 const { response} = require('express');
 const { findById } = require('../models/container');
 const {Container, User} = require('../models');
+const { containerIsBussy } = require('../middlewares');
 
 const getContainers = async(req,res) => {
     
@@ -17,8 +18,35 @@ const getContainers = async(req,res) => {
         console.log(error);
         res.json(error);
     }
-
 }
+
+const getContainersAvaileble = async ( req, res) => {
+    const {type} = req.query;
+    const query = {
+        assign_user: null,
+        state: true
+    };
+
+    try {
+
+        if(type) query.type_container = type.toUpperCase();
+
+        const [containers, total] = await Promise.all([
+            Container.find(query),
+            Container.countDocuments(query)
+        ])
+
+        res.status(200).json({
+            total,
+            containers
+        });
+
+        
+    } catch (error) {
+        res.json(error)
+    }
+}
+
 const getContainer = async(req,res= response) => {
     
     const {id} = req.params;
@@ -37,6 +65,7 @@ const createContainer = async(req,res= response) => {
     
     const name= req.body.name.toUpperCase();
     const type_container = req.body.type_container.toUpperCase();
+    const rental = req.body.rental;
 
 
     const containerDB = await Container.findOne({name,type_container});
@@ -50,6 +79,7 @@ const createContainer = async(req,res= response) => {
     const data ={
         name,
         type_container,
+        rental,
         user: req.user._id,
     }
 
@@ -72,7 +102,6 @@ const deleteContainer = async(req,res) => {
     const {id} = req.params;
 
     const container = await Container.findByIdAndUpdate(id,{state:false},{new:true});
-    
 
     res.json(container)
 }
@@ -80,21 +109,14 @@ const deleteContainer = async(req,res) => {
 const assignUser = async (req, res) => {
     
     const {id} = req.params;
+    const {name_by_user} = req.body;
+    
+    const assign_user = req.user.id;
 
-    const {assign_user} = req.body;
-
-    const user = await User.findById(assign_user);
-
-    if(!user){
-        return res.status(404).json({
-            msg: `No existe usuario con el id ${assign_user}`
-        })
-    }
-
-    const container = await Container.findByIdAndUpdate(id,{assign_user});
+    const container = await Container.findByIdAndUpdate(id,{assign_user, name_by_user});
 
     res.status(200).json({
-        msg: `El usuario a sido asignado al contenedor ${container.name}`,
+        msg: `Has adquirido el contenedor ${container.name}`,
     })
     
 
@@ -103,6 +125,7 @@ const assignUser = async (req, res) => {
 module.exports = {
     getContainer,
     getContainers,
+    getContainersAvaileble,
     createContainer,
     updateContainer,
     deleteContainer,

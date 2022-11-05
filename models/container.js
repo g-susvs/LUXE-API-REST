@@ -6,10 +6,13 @@ const ContainerSchema = new Schema({
         required: [true,'Name is required'],
         unique: true
     },
+    name_by_user:{
+        type: String,
+        default:""
+    },
     nro_items:{
         type:Number,
         default:0
-
     },
     maximum_space:{
         type:Number,
@@ -19,9 +22,14 @@ const ContainerSchema = new Schema({
         type: String,
         required: [true,'Type container is required']
     },
+    rental:{
+        type: Number,
+        require: true
+    },
     assign_user:{
-        type: Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId || null,
         ref: 'User',
+        default: null
     },
     user:{
         type: Schema.Types.ObjectId,

@@ -12,6 +12,7 @@ class Server{
         this.dbConnect()
         this.middlewares();
         this.routes()
+
     }
 
     middlewares(){
@@ -34,6 +35,7 @@ class Server{
         this.app.use('/api/search',require('../routes/search'));
         this.app.use('/api/uploads',require('../routes/upload'));
         this.app.use('/api/userprofile',require('../routes/profile'));
+        this.app.use('/api/account',require('../routes/account'));
         
         this.app.get('/*',(req,res)=>{
             const pathFile = path.join(__dirname + '/../public/404.html')

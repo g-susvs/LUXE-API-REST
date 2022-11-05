@@ -6,7 +6,8 @@ const {
     createContainer, 
     updateContainer, 
     deleteContainer, 
-    assignUser
+    assignUser,
+    getContainersAvaileble
 } = require('../controllers/container');
 const { existeContainerPorId } = require('../helpers/db_validator');
 const { validateFields, validateJWT, containerIsBussy } = require('../middlewares');
@@ -16,6 +17,8 @@ const router = Router();
 
 router.get('/', cacheInit, getContainers);
 
+router.get('/available', cacheInit, getContainersAvaileble)
+
 router.get('/:id', [
     cacheInit,
     check('id','No es un id valido de mongo').isMongoId(),
@@ -24,8 +27,9 @@ router.get('/:id', [
 
 router.post('/',[
     validateJWT,
-    check('name','El nombre es obligatorio').not().isEmpty(),
-    check('type_container', 'El tipo de contenedor es obligatorio').not().isEmpty(),
+    check('name','El nombre es obligatorio').notEmpty(),
+    check('type_container', 'El tipo de contenedor es obligatorio').notEmpty(),
+    check('rental','El precio de alquiler es requerido').isNumeric(),
     validateFields
 ], createContainer);
 
@@ -48,7 +52,7 @@ router.put('/assign/:id',[
     validateJWT,
     check('id','No es un ID de mongo valido').isMongoId(),
     check('id').custom(containerIsBussy),
-    check('assign_user','No es un ID de mongo valido').isMongoId(),
+    check('name_by_user', 'El nombre es obligatorio').notEmpty(),
     validateFields
 ] ,assignUser );
 module.exports = router
