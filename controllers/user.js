@@ -47,10 +47,13 @@ const createUser = async (req = request, res = response) => {
     user.password = bcrypt.hashSync(password, salt);
     
     await user.save();
+
+    const token = await generateJWT(user.id); 
     
     res.status(200).json({
         msg: "Te has registrado",
-        user
+        user,
+        token
     });
 }
 

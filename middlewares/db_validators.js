@@ -75,6 +75,13 @@ const containerIsBussy = async (id) => {
     if(container.assign_user)  throw `El contenedor ${container.name} ya está ocupado`;
 
 }
+const isPlanValid = (plan) => {
+    const planesValid = ["MENSUAL","ANUAL"];
+    if( !planesValid.includes(plan.toUpperCase()) ) {
+        throw `El plan ${plan} no es valido - validos: ${planesValid}`;
+    }
+    return true;
+}
 module.exports = {
     emailExists,
     customValidPassword,
@@ -84,5 +91,6 @@ module.exports = {
     isRUCValid,
     validFormDataFile,
     isValidCollection,
-    containerIsBussy
+    containerIsBussy,
+    isPlanValid
 }

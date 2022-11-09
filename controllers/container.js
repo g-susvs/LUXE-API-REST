@@ -108,10 +108,10 @@ const deleteContainer = async(req,res) => {
 
 const assignUser = async (req, res) => {
     
-    const {id} = req.params;
+    const {id} = req.params; // id del contendor
     const {name_by_user} = req.body;
     
-    const assign_user = req.user.id;
+    const assign_user = req.user.id; // id obtenido de la validación de JWT
 
     const container = await Container.findByIdAndUpdate(id,{assign_user, name_by_user});
 

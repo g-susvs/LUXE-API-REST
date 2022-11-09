@@ -7,15 +7,21 @@ const accountSchema = new Schema({
         required: true
     },
     registration_date: {
-        type: Date,
+        type: Number,
         required: true
     },
     plan:{
-        type: Number,
+        type: String,
         required: true,
     },
+    rental_price:{
+        type: Number,
+        required: true,
+
+    },
     expiration_date:{
-        type: Date,
+        type: Number,
+        required: true
     }
 })
 

@@ -1,17 +1,19 @@
 const { request } = require("express");
-const { Container, Item } = require("../models");
+const { Container, Item, Account } = require("../models");
 
 const userProfile = async (req = request, res) => {
     const user = req.user;
 
     try {
-        const [containers, items] = await Promise.all([
+        const [containers, items, account] = await Promise.all([
             Container.find({assign_user: user.id}),
-            Item.find({user:user.id})
+            Item.find({user:user.id}),
+            Account.findOne({user: user.id})
         ])
         
         res.status(200).json({
             user,
+            account,
             container:{
                 total:containers.length,
                 containers
