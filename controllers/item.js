@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { Container } = require("../models");
 const Item = require("../models/item");
 
 const getItems = async(req,res= response) => {
@@ -45,6 +46,24 @@ const getItem = async(req,res=response) => {
 
 const postItems = async(req,res=response) => {
     
+    const {id} = req.user;
+    const { container } = req.body;
+
+    const containerExist = await Container.findById(container);
+
+    if(!containerExist){
+        return res.status(400).json({
+            msg: `No existe contenedor con el id ${container}`
+        })
+    }
+
+    if( containerExist.assign_user != id ){
+        return res.status(403).json({
+            msg: `No tiene acceso al contenedor: ${containerExist.name}`
+        })
+    }
+
+
     const {state, user, ...body} = req.body;
 
     const itemDB = await Item.findOne({name: body.name});
@@ -66,6 +85,10 @@ const postItems = async(req,res=response) => {
 
     //Guardar en DB
     await item.save();
+
+    // incrementar el nro de items del contenedor
+    containerExist.nro_items = containerExist.nro_items + 1;
+    await containerExist.save();
 
     res.status(201).json(item);
 }
@@ -93,9 +116,15 @@ const deleteItems = async(req,res=response) => {
     const {id} = req.params;
 
     const itemBorrado = await Item.findByIdAndUpdate(id,{state:false},{new:true});
-    // const categoriaAutenticado = req.usuario;
 
-    res.json(itemBorrado)
+    // decrementar el nro de items 
+    const container = await Container.findById(itemBorrado.container);
+    container.nro_items = container.nro_items - 1;
+    await container.save();
+    
+    res.json({
+        msg: "Item eliminado",
+        itemBorrado})
 }
 
 module.exports={

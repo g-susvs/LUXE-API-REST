@@ -82,6 +82,26 @@ const isPlanValid = (plan) => {
     }
     return true;
 }
+const isValidContainer = async (req, res, next) => {
+    const {id} = req.user;
+    const { container } = req.body;
+
+    const containerExist = await Container.findById(container);
+
+    if(!containerExist){
+        return res.status(400).json({
+            msg: `No existe contenedor con el id ${container}`
+        })
+    }
+
+    if( containerExist.assign_user != id ){
+        return res.status(403).json({
+            msg: `No tiene acceso al contenedor: ${containerExist.name}`
+        })
+    }
+
+    next();
+}
 module.exports = {
     emailExists,
     customValidPassword,
@@ -92,5 +112,6 @@ module.exports = {
     validFormDataFile,
     isValidCollection,
     containerIsBussy,
-    isPlanValid
+    isPlanValid,
+    isValidContainer
 }

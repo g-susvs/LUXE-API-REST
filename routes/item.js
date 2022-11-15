@@ -10,7 +10,8 @@ const { existeContainerPorId, existeItemPorId } = require('../helpers/db_validat
 const { 
     cacheInit,
     validateJWT,
-    validateFields
+    validateFields,
+    isValidContainer
 } = require('../middlewares');
 
 
@@ -31,7 +32,7 @@ router.post('/', [
     check('name','El nombre es obligatorio').not().isEmpty(),
     check('description','El nombre es obligatorio').not().isEmpty(),
     check('container','No es un id de mongo').isMongoId(),
-    check('container').custom(existeContainerPorId),
+    // isValidContainer,
     validateFields
 ],postItems);
 
