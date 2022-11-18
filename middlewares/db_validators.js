@@ -76,7 +76,7 @@ const containerIsBussy = async (id) => {
 
 }
 const isPlanValid = (plan) => {
-    const planesValid = ["MENSUAL","ANUAL"];
+    const planesValid = ["MENSUAL","ANUAL","TRIMESTRAL"];
     if( !planesValid.includes(plan.toUpperCase()) ) {
         throw `El plan ${plan} no es valido - validos: ${planesValid}`;
     }

@@ -24,5 +24,8 @@ const accountSchema = new Schema({
         required: true
     }
 })
-
+accountSchema.methods.toJSON = function(){
+    const {__v,...rest} = this.toObject();
+    return rest;
+}
 module.exports = model('Account', accountSchema)

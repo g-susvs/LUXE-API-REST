@@ -21,6 +21,7 @@ const createAccount = async (req = request, res) => {
         let planTime;
 
         if (plan.toUpperCase() == "MENSUAL") planTime = 1000 * 60 * 60 * 24 * 30;
+        if (plan.toUpperCase() == "TRIMESTRAL") planTime = 1000 * 60 * 60 * 24 * 30 * 3;
         if (plan.toUpperCase() == "ANUAL") planTime = 1000 * 60 * 60 * 24 * 30 * 12;
 
         const expiration_date = new Date(now.getTime() + planTime).getTime();
