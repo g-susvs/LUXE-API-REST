@@ -19,7 +19,7 @@ const login = async (req, res) => {
     const token = await generateJWT(user.id);
 
     // validar si tiene una cuenta - solo para usuarios comunes
-    if(user.role != 'ADMIN_ROLE'){
+    // if(user.role != 'ADMIN_ROLE'){
 
         const accountExist = await Account.findOne({ user: user.id });
 
@@ -29,7 +29,7 @@ const login = async (req, res) => {
                 token
             })
         }
-    }
+    // }
 
     res.status(200).json({
         token,
