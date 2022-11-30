@@ -10,7 +10,7 @@ const {
     getContainersAvaileble
 } = require('../controllers/container');
 const { existeContainerPorId } = require('../helpers/db_validator');
-const { validateFields, validateJWT, containerIsBussy } = require('../middlewares');
+const { validateFields, validateJWT, containerIsBussy, isAdminRole } = require('../middlewares');
 const { cacheInit } = require('../middlewares/cache');
 
 const router = Router();
@@ -27,6 +27,7 @@ router.get('/:id', [
 
 router.post('/',[
     validateJWT,
+    isAdminRole,
     check('name','El nombre es obligatorio').notEmpty(),
     check('type_container', 'El tipo de contenedor es obligatorio').notEmpty(),
     check('rental','El precio de alquiler es requerido').isNumeric(),

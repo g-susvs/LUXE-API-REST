@@ -1,11 +1,11 @@
-const { response} = require('express');
+const { response } = require('express');
 const { findById } = require('../models/container');
-const {Container, User} = require('../models');
+const { Container, User } = require('../models');
 const { containerIsBussy } = require('../middlewares');
 
-const getContainers = async(req,res) => {
-    
-    const query = { state: true }; 
+const getContainers = async (req, res) => {
+
+    const query = { state: true };
 
     try {
         const [containers, total] = await Promise.all([
@@ -13,15 +13,15 @@ const getContainers = async(req,res) => {
             Container.countDocuments(query)
         ])
         res.status(200).json({ total, containers })
-        
+
     } catch (error) {
         console.log(error);
         res.json(error);
     }
 }
 
-const getContainersAvaileble = async ( req, res) => {
-    const {type} = req.query;
+const getContainersAvaileble = async (req, res) => {
+    const { type } = req.query;
     const query = {
         assign_user: null,
         state: true
@@ -29,7 +29,7 @@ const getContainersAvaileble = async ( req, res) => {
 
     try {
 
-        if(type) query.type_container = type.toUpperCase();
+        if (type) query.type_container = type.toUpperCase();
 
         const [containers, total] = await Promise.all([
             Container.find(query),
@@ -41,34 +41,34 @@ const getContainersAvaileble = async ( req, res) => {
             containers
         });
 
-        
+
     } catch (error) {
         res.json(error)
     }
 }
 
-const getContainer = async(req,res= response) => {
-    
-    const {id} = req.params;
+const getContainer = async (req, res = response) => {
+
+    const { id } = req.params;
 
     try {
         const container = await Container.findById(id) // se podria validar por el state y demas
-                                .populate('user','name');
+            .populate('user', 'name');
         res.json(container);
-        
+
     } catch (error) {
         console.log(error);
         res.json(error);
     }
 }
-const createContainer = async(req,res= response) => {
-    
-    const name= req.body.name.toUpperCase();
+const createContainer = async (req, res = response) => {
+
+    const name = req.body.name.toUpperCase();
     const type_container = req.body.type_container.toUpperCase();
     const rental = req.body.rental;
 
 
-    const containerDB = await Container.findOne({name,type_container});
+    const containerDB = await Container.findOne({ name, type_container });
 
     if (containerDB) {
         return res.status(400).json({
@@ -76,7 +76,7 @@ const createContainer = async(req,res= response) => {
         })
     }
 
-    const data ={
+    const data = {
         name,
         type_container,
         rental,
@@ -87,38 +87,41 @@ const createContainer = async(req,res= response) => {
 
     await container.save();
 
-    res.status(201).json(container);
+    res.status(201).json({
+        msg: 'Contenedor creado',
+        container
+    });
 }
-const updateContainer = async(req,res) => {
-    const {id} = req.params;
-    const {user, ...data} = req.body;
+const updateContainer = async (req, res) => {
+    const { id } = req.params;
+    const { user, ...data } = req.body;
 
-    const container = await Container.findByIdAndUpdate(id, data, {new:true});
+    const container = await Container.findByIdAndUpdate(id, data, { new: true });
 
     res.json(container);
 }
-const deleteContainer = async(req,res) => {
-    
-    const {id} = req.params;
+const deleteContainer = async (req, res) => {
 
-    const container = await Container.findByIdAndUpdate(id,{state:false},{new:true});
+    const { id } = req.params;
+
+    const container = await Container.findByIdAndUpdate(id, { state: false }, { new: true });
 
     res.json(container)
 }
 
 const assignUser = async (req, res) => {
-    
-    const {id} = req.params; // id del contendor
-    const {name_by_user} = req.body;
-    
+
+    const { id } = req.params; // id del contendor
+    const { name_by_user } = req.body;
+
     const assign_user = req.user.id; // id obtenido de la validación de JWT
 
-    const container = await Container.findByIdAndUpdate(id,{assign_user, name_by_user});
+    const container = await Container.findByIdAndUpdate(id, { assign_user, name_by_user });
 
     res.status(200).json({
         msg: `Has adquirido el contenedor ${container.name}`,
     })
-    
+
 
 }
 
