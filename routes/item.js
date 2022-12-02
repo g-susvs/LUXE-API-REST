@@ -5,19 +5,21 @@ const {
     getItem, 
     postItems, 
     putItems, 
-    deleteItems } = require('../controllers/item');
+    deleteItems, 
+    deleteItemDB} = require('../controllers/item');
 const { existeContainerPorId, existeItemPorId } = require('../helpers/db_validator');
 const { 
     cacheInit,
     validateJWT,
     validateFields,
-    isValidContainer
+    isValidContainer,
+    isAdminRole
 } = require('../middlewares');
 
 
 const router = Router();
 
-router.get('/', cacheInit, getItems);
+router.get('/', getItems);
 
 router.get('/:id',[
     cacheInit,
@@ -50,5 +52,12 @@ router.delete('/:id',[
     check('id').custom(existeItemPorId),
     validateFields
 ], deleteItems);
+router.delete('/definitive/:id',[
+    validateJWT,
+    isAdminRole,
+    check('id','No es un Id Valido').isMongoId(),
+    check('id').custom(existeItemPorId),
+    validateFields
+], deleteItemDB);
 
 module.exports = router

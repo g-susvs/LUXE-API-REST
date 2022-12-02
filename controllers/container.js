@@ -67,6 +67,13 @@ const createContainer = async (req, res = response) => {
     const type_container = req.body.type_container.toUpperCase();
     const rental = req.body.rental;
 
+    const typeValids = ['SMALL', 'MEDIUM', 'BIG'];
+    if(!typeValids.includes(type_container)){
+        return res.status(404).json({
+            msg: `El tipo ${type_container} no es valido: ${typeValids}`
+        })
+    }
+
 
     const containerDB = await Container.findOne({ name, type_container });
 
@@ -108,6 +115,17 @@ const deleteContainer = async (req, res) => {
 
     res.json(container)
 }
+const deleteContainerDB = async (req, res) => {
+
+    const { id } = req.params;
+
+    const container = await Container.findByIdAndDelete(id);
+
+    res.json({
+        msg: "Contenedor eliminado",
+        container
+    })
+}
 
 const assignUser = async (req, res) => {
 
@@ -132,5 +150,6 @@ module.exports = {
     createContainer,
     updateContainer,
     deleteContainer,
+    deleteContainerDB,
     assignUser
 }

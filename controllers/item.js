@@ -126,11 +126,27 @@ const deleteItems = async(req,res=response) => {
         msg: "Item eliminado",
         itemBorrado})
 }
+const deleteItemDB = async(req,res=response) => {
+
+    const {id} = req.params;
+
+    const itemBorrado = await Item.findByIdAndDelete(id,{new:true})
+
+    // decrementar el nro de items 
+    const container = await Container.findById(itemBorrado.container);
+    container.nro_items = container.nro_items - 1;
+    await container.save();
+    
+    res.json({
+        msg: "Item eliminado",
+        itemBorrado})
+}
 
 module.exports={
     getItems,
     postItems,
     putItems,
     deleteItems,
+    deleteItemDB,
     getItem
 }
