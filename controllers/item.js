@@ -13,8 +13,8 @@ const getItems = async(req,res= response) => {
             Item.find(query)
             .skip(Number(desde))
             .limit(Number(limite))
-            .populate("user","name")
-            .populate("container","name")
+            .populate("user",["name","email"])
+            .populate("container",["name","name_by_user"])
         ])
         res.json({
             total,

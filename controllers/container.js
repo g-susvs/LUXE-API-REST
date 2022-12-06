@@ -1,7 +1,5 @@
 const { response } = require('express');
-const { findById } = require('../models/container');
 const { Container, User } = require('../models');
-const { containerIsBussy } = require('../middlewares');
 
 const getContainers = async (req, res) => {
 
@@ -9,7 +7,8 @@ const getContainers = async (req, res) => {
 
     try {
         const [containers, total] = await Promise.all([
-            Container.find(query),
+            Container.find(query)
+                .populate("assign_user", ["name","email"]),
             Container.countDocuments(query)
         ])
         res.status(200).json({ total, containers })
@@ -68,7 +67,7 @@ const createContainer = async (req, res = response) => {
     const rental = req.body.rental;
 
     const typeValids = ['SMALL', 'MEDIUM', 'BIG'];
-    if(!typeValids.includes(type_container)){
+    if (!typeValids.includes(type_container)) {
         return res.status(404).json({
             msg: `El tipo ${type_container} no es valido: ${typeValids}`
         })

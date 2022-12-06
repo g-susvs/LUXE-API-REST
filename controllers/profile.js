@@ -7,7 +7,8 @@ const userProfile = async (req = request, res) => {
     try {
         const [containers, items, account] = await Promise.all([
             Container.find({assign_user: user.id}),
-            Item.find({user:user.id}),
+            Item.find({user:user.id})
+                .populate("container",["name","name_by_user"]),
             Account.findOne({user: user.id})
         ])
         
